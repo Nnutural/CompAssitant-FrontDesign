@@ -1,50 +1,80 @@
-# 安枢 SecureHub
+# SecureHub Full-Stack Monorepo
 
-面向网安学生的科研与竞赛智能体平台
+SecureHub is organized as a full-stack monorepo. The existing Vite frontend has been moved into `frontend/`, and a new FastAPI backend scaffold lives in `backend/`.
 
-## 功能模块
+## Structure
 
-### 核心页面
+```text
+.
+├─ frontend/   # Existing React + Vite frontend
+├─ backend/    # FastAPI backend scaffold
+├─ docs/       # Architecture and engineering notes
+├─ scripts/    # Local development helper scripts
+└─ docker-compose.yml
+```
 
-- **Home（总览）**: 今日关键事项、截止提醒、推荐行动、最近生成物、数据新鲜度
-- **Opportunities（机会情报）**: 竞赛信息、基金项目筛选与对比
-- **Recommender（方向推荐）**: 用户画像、研究方向推荐、行动路线图
-- **Idea Lab（选题推演）**: 选题卡池、创意画布、证据引用
-- **Doc Studio（写作生成）**: AI辅助文档生成、计划书编辑
-- **Planner（计划与任务）**: 看板视图、时间线、任务清单
-- **Assets（成果资产库）**: 文档管理、版本控制、提交清单
-- **Careers（就业洞察）**: 岗位分析、技能差距、训练计划
-- **Data Hub（数据中心）**: 数据类型管理、搜索与导出
-- **Settings（设置）**: 个人信息、通知设置、数据合规
+## Frontend
 
-### 数据类型标签（D1-D7）
+The frontend keeps the original Vite structure, dependencies, build configuration, and source code.
 
-- **D1**: 招聘信息
-- **D2**: 政策/标准/法规
-- **D3**: 社会热点
-- **D4**: 热点趋势
-- **D5**: 竞赛信息
-- **D6**: 模板/获奖参考
-- **D7**: 基金/开放实验室
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-### 技术栈
+The local frontend dev server runs on `http://localhost:5173` by default. Future API calls should read the backend base URL from:
 
-- React 18 + TypeScript
-- React Router v7 (路由管理)
-- Tailwind CSS v4 (样式)
-- Lucide React (图标)
-- Vite (构建工具)
+```text
+VITE_API_BASE_URL=http://127.0.0.1:8000
+```
 
-## 开始使用
+## Backend
 
-运行开发服务器后，访问首页即可体验完整的多页面应用。
+The backend is a minimal FastAPI project using `uv`, `pydantic-settings`, and `pytest`.
 
-## 设计特点
+```bash
+cd backend
+uv sync
+uv run uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+```
 
-- **1440×900 Desktop 优化布局**
-- **App Shell 架构**: 左侧侧边栏（240px）+ 顶部栏（64px）+ 主内容区 + 右侧证据链抽屉（360px）
-- **专业企业级 B2B SaaS 风格**
-- **12列栅格系统，最大内容宽度1200px**
-- **8px spacing system**
-- **真实感中文文案与数据**
-- **统一的组件库与交互体验**
+Available starter endpoints:
+
+```text
+GET /
+GET /api/v1/health
+GET /api/v1/system/ping
+GET /api/v1/placeholder/modules
+```
+
+Run backend tests:
+
+```bash
+cd backend
+uv run pytest
+```
+
+## Local Integration
+
+1. Start the backend on `http://127.0.0.1:8000`.
+2. Start the frontend on `http://localhost:5173`.
+3. Keep `frontend/.env` aligned with `frontend/.env.example`.
+4. The backend CORS configuration allows both `http://localhost:5173` and `http://127.0.0.1:5173` by default.
+
+## Docker Compose
+
+The compose file is intended for local development structure and smoke testing:
+
+```bash
+docker compose up
+```
+
+It starts the Vite dev server and FastAPI development server with mounted source directories.
+
+## Next Steps
+
+- Add real business endpoints under `backend/app/api/v1/endpoints/`.
+- Put orchestration logic in `backend/app/services/`.
+- Add persistence behind `backend/app/repositories/` and `backend/app/models/` when a database is introduced.
+- Wire frontend pages to backend APIs through `frontend/src/lib/api.ts`.
