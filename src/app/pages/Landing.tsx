@@ -50,7 +50,7 @@ export function Landing() {
             <div className="w-8 h-8 bg-brand-blue-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">安</span>
             </div>
-            <span className="font-semibold text-gray-900">安枢 SecureHub</span>
+            <span className="font-semibold text-gray-900">安枢智梯 CyberLadder</span>
           </div>
 
           <div className="hidden md:flex items-center gap-8">
@@ -720,7 +720,7 @@ export function Landing() {
                   <span className="text-white font-bold text-sm">安</span>
                 </div>
                 <span className="font-semibold text-white">
-                  安枢 SecureHub
+                  安枢智梯 CyberLadder
                 </span>
               </div>
               <p className="text-sm leading-relaxed">
@@ -787,7 +787,7 @@ export function Landing() {
 
           <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-sm">
-              © 2026 安枢 SecureHub. 挑战杯项目展示原型.
+              © 2026 安枢智梯 CyberLadder. 挑战杯项目展示原型.
             </div>
             <div className="flex gap-6 text-sm">
               <a href="#" className="hover:text-white transition-colors">
