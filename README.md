@@ -1,4 +1,4 @@
-# SecureHub Full-Stack Monorepo
+# 安枢智梯 SecureHub Full-Stack Monorepo
 
 SecureHub is organized as a full-stack monorepo. The existing Vite frontend has been moved into `frontend/`, and a new FastAPI backend scaffold lives in `backend/`.
 
