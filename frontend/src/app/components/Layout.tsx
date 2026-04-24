@@ -13,11 +13,11 @@ import {
   ChevronDown,
   ChevronRight,
   Menu,
-  Search,
   Bell,
   Database,
 } from 'lucide-react';
 import { EvidenceDrawer } from './EvidenceDrawer';
+import { GlobalSearch } from './GlobalSearch';
 
 export type NavChild = { key: string; label: string };
 export type NavItem = {
@@ -283,14 +283,7 @@ export function Layout() {
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shrink-0">
           <div className="flex items-center gap-4 flex-1 max-w-xl">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input
-                type="text"
-                placeholder="搜索功能、数据、文档... (Ctrl+K)"
-                className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue-600 focus:border-transparent"
-              />
-            </div>
+            <GlobalSearch />
           </div>
 
           <div className="flex items-center gap-2">
