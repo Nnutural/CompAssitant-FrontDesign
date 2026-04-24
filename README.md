@@ -36,7 +36,7 @@ The backend is a minimal FastAPI project using `uv`, `pydantic-settings`, and `p
 ```bash
 cd backend
 uv sync
-uv run uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+./start.sh
 ```
 
 Available starter endpoints:

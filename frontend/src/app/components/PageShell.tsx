@@ -61,14 +61,16 @@ export function Card({
   right,
   children,
   className = '',
+  href,
 }: {
   title?: string;
   subtitle?: string;
   right?: ReactNode;
   children: ReactNode;
   className?: string;
+  href?: string;
 }) {
-  return (
+  const content = (
     <section
       className={`bg-white border border-slate-200 rounded-xl shadow-sm ${className}`}
     >
@@ -84,6 +86,16 @@ export function Card({
       <div className="p-5">{children}</div>
     </section>
   );
+
+  if (href) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className="block hover:opacity-80 transition-opacity">
+        {content}
+      </a>
+    );
+  }
+
+  return content;
 }
 
 export function Tag({
