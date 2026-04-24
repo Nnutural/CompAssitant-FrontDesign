@@ -234,10 +234,10 @@ export function Practice() {
             <Card>
               <ul className="divide-y divide-slate-100">
                 {[
-                  { t: '某高校 VPN 接口未授权访问修复', tag: '企业实战', m: '2026-04', href: 'https://blog.csdn.net/' },
-                  { t: 'Log4Shell 在金融系统的完整应急复盘', tag: '应急响应', m: '2026-03', href: 'https://www.oracle.com/security-alerts/' },
-                  { t: '电商风控绕过：业务逻辑漏洞挖掘', tag: '业务安全', m: '2026-02', href: 'https://owasp.org/' },
-                  { t: '物联网设备固件逆向：某摄像头0day分析', tag: '硬件逆向', m: '2026-01', href: 'https://ghidra-sre.org/' },
+                  { t: '某高校 VPN 接口未授权访问修复', tag: '企业实战', m: '2026-04', href: 'https://www.venustech.com.cn/new_type/aqtg/20230911/26223.html' },
+                  { t: 'Log4shell漏洞研究及其挖矿案例分析', tag: '应急响应', m: '2026-03', href: 'https://www.anquanke.com/post/id/263217' },
+                  { t: '电商风险之刷单浅析', tag: '业务安全', m: '2026-02', href: 'https://www.anquanke.com/post/id/224331' },
+                  { t: 'IoT安全透视：D-Link DWR-932B固件全面逆向分析', tag: '硬件逆向', m: '2026-01', href: 'https://zhuanlan.zhihu.com/p/1898075424287854702' },
                 ].map((x) => (
                   <li key={x.t}>
                     <a href={x.href} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between py-3 hover:bg-slate-50 -mx-5 px-5 transition-colors">
