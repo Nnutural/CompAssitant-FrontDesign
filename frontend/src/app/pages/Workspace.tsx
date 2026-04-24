@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import {
   AlertTriangle,
   Sparkles,
@@ -11,6 +12,9 @@ import {
   CalendarClock,
 } from 'lucide-react';
 import { PageShell, Card, Tag } from '../components/PageShell';
+import { apiGet } from '@/lib/api';
+
+type PolicyItem = { title: string; url: string };
 
 const WelcomeBar = () => (
   <div className="bg-gradient-to-r from-brand-blue-600 to-brand-blue-700 rounded-xl p-6 text-white flex items-center justify-between">
@@ -212,23 +216,33 @@ const Freshness = () => (
   </div>
 );
 
-const HotList = ({ items, icon: Icon }: { items: { t: string; s: string; tag: string }[]; icon: any }) => (
-  <Card>
-    <ul className="divide-y divide-slate-100">
-      {items.map((x, i) => (
-        <li key={x.t} className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
-          <span className="text-xs text-brand-blue-600 font-semibold w-5 shrink-0">{i + 1}</span>
-          <Icon className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
-          <div className="flex-1">
-            <p className="text-sm text-slate-800">{x.t}</p>
-            <p className="text-xs text-slate-500 mt-0.5">{x.s}</p>
-          </div>
-          <Tag tone="blue">{x.tag}</Tag>
-        </li>
-      ))}
-    </ul>
-  </Card>
-);
+const PolicyList = ({ icon: Icon }: { icon: any }) => {
+  const [items, setItems] = useState<PolicyItem[]>([]);
+
+  useEffect(() => {
+    apiGet<{ items: PolicyItem[] }>('/api/v1/policy/policies')
+      .then(res => setItems(res.items))
+      .catch(() => setItems([]));
+  }, []);
+
+  if (items.length === 0) return <Card><p className="text-sm text-slate-500 p-4">加载中...</p></Card>;
+
+  return (
+    <Card>
+      <ul className="divide-y divide-slate-100">
+        {items.map((x, i) => (
+          <li key={x.url} className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
+            <span className="text-xs text-brand-blue-600 font-semibold w-5 shrink-0">{i + 1}</span>
+            <Icon className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
+            <div className="flex-1">
+              <a href={x.url} target="_blank" rel="noopener noreferrer" className="text-sm text-slate-800 hover:text-brand-blue-600">{x.title}</a>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  );
+};
 
 export function Workspace() {
   return (
@@ -276,16 +290,7 @@ export function Workspace() {
           key: 'policy',
           label: '国家政策',
           description: '最新网络安全法规政策动态解读与合规要点速览',
-          render: () => (
-            <HotList
-              icon={ShieldCheck}
-              items={[
-                { t: '《网络数据安全管理条例》正式施行', s: '国务院 · 2026-01-01', tag: '法规' },
-                { t: '工信部发布关基运营者网络安全保护要求', s: '工信部 · 部门规章', tag: '政策' },
-                { t: '网信办开展个人信息出境监督检查专项', s: '网信办 · 专项行动', tag: '监管' },
-              ]}
-            />
-          ),
+          render: () => <PolicyList icon={ShieldCheck} />,
         },
       ]}
     />

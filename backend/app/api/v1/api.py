@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import health, placeholder, research, system, ctftime
+from app.api.v1.endpoints import health, placeholder, research, system, ctftime, policy
 
 api_router = APIRouter()
 api_router.include_router(health.router, tags=["health"])
@@ -19,4 +19,9 @@ api_router.include_router(
     ctftime.router,
     prefix="/ctftime",
     tags=["ctftime"],
+)
+api_router.include_router(
+    policy.router,
+    prefix="/policy",
+    tags=["policy"],
 )
