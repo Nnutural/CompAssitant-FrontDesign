@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -23,6 +23,17 @@ class Settings(BaseSettings):
         ]
     )
     DEBUG: bool = True
+
+    @field_validator("DEBUG", mode="before")
+    @classmethod
+    def parse_debug(cls, value: object) -> object:
+        if isinstance(value, str):
+            normalized = value.strip().lower()
+            if normalized in {"release", "production", "prod", "false", "0", "no"}:
+                return False
+            if normalized in {"debug", "development", "dev", "true", "1", "yes"}:
+                return True
+        return value
 
 
 @lru_cache

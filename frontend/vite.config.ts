@@ -19,6 +19,9 @@ function figmaAssetResolver() {
 export default defineConfig({
   plugins: [
     figmaAssetResolver(),react(), tailwindcss()],
+  build: {
+    emptyOutDir: false,
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
