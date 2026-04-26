@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import ReactMarkdown, { type Components } from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Bot, Send, User, Lightbulb, FlaskConical, Trophy, ShieldCheck, Flame, PenLine, Compass } from 'lucide-react';
 import { PageShell, Card, Tag } from '../components/PageShell';
 
@@ -154,6 +156,59 @@ const agentsMap: Record<string, {
   },
 };
 
+const markdownComponents: Components = {
+  p: ({ children }) => <p className="my-1 first:mt-0 last:mb-0">{children}</p>,
+  h1: ({ children }) => <h1 className="mt-3 mb-2 text-lg font-semibold text-slate-950 first:mt-0">{children}</h1>,
+  h2: ({ children }) => <h2 className="mt-3 mb-2 text-base font-semibold text-slate-950 first:mt-0">{children}</h2>,
+  h3: ({ children }) => <h3 className="mt-2 mb-1 text-sm font-semibold text-slate-950 first:mt-0">{children}</h3>,
+  ul: ({ children }) => <ul className="my-2 ml-4 list-disc space-y-1">{children}</ul>,
+  ol: ({ children }) => <ol className="my-2 ml-4 list-decimal space-y-1">{children}</ol>,
+  li: ({ children }) => <li className="pl-1">{children}</li>,
+  strong: ({ children }) => <strong className="font-semibold text-slate-950">{children}</strong>,
+  em: ({ children }) => <em className="italic text-slate-700">{children}</em>,
+  blockquote: ({ children }) => (
+    <blockquote className="my-2 border-l-2 border-[#003399]/40 pl-3 text-slate-600">{children}</blockquote>
+  ),
+  a: ({ href, children }) => (
+    <a href={href} target="_blank" rel="noreferrer" className="font-medium text-[#003399] underline underline-offset-2">
+      {children}
+    </a>
+  ),
+  code: ({ className, children }) => {
+    const value = String(children);
+    const isBlock = Boolean(className) || value.includes('\n');
+
+    return (
+      <code
+        className={
+          isBlock
+            ? 'block overflow-x-auto rounded-md bg-slate-900 px-3 py-2 text-xs leading-relaxed text-slate-100'
+            : 'rounded bg-slate-200/70 px-1.5 py-0.5 text-[0.85em] text-slate-900'
+        }
+      >
+        {children}
+      </code>
+    );
+  },
+  pre: ({ children }) => <pre className="my-2 overflow-x-auto rounded-md bg-slate-900 p-0">{children}</pre>,
+  table: ({ children }) => (
+    <div className="my-2 overflow-x-auto rounded-md border border-slate-200">
+      <table className="min-w-full border-collapse text-left text-xs">{children}</table>
+    </div>
+  ),
+  thead: ({ children }) => <thead className="bg-slate-100 text-slate-700">{children}</thead>,
+  th: ({ children }) => <th className="border-b border-slate-200 px-3 py-2 font-semibold">{children}</th>,
+  td: ({ children }) => <td className="border-t border-slate-100 px-3 py-2 align-top">{children}</td>,
+};
+
+function MarkdownMessage({ content }: { content: string }) {
+  return (
+    <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents} skipHtml>
+      {content}
+    </ReactMarkdown>
+  );
+}
+
 function ChatView({ agentKey }: { agentKey: string }) {
   const agent = agentsMap[agentKey] || agentsMap['topic'];
   const [, setParams] = useSearchParams();
@@ -227,13 +282,13 @@ function ChatView({ agentKey }: { agentKey: string }) {
                   </div>
                 )}
                 <div
-                  className={`max-w-[75%] p-3 rounded-lg text-sm leading-relaxed whitespace-pre-line ${
+                  className={`max-w-[75%] p-3 rounded-lg text-sm leading-relaxed ${
                     m.role === 'user'
                       ? 'bg-[#003399] text-white'
                       : 'bg-slate-50 text-slate-800 border border-slate-100'
                   }`}
                 >
-                  {m.content}
+                  {m.role === 'assistant' ? <MarkdownMessage content={m.content} /> : m.content}
                 </div>
                 {m.role === 'user' && (
                   <div className="w-8 h-8 rounded-lg bg-slate-200 flex items-center justify-center shrink-0">
