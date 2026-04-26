@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import { Layout } from '@/app/components/Layout';
 import { Landing } from '@/app/pages/Landing';
 import { Workspace } from '@/app/pages/Workspace';
@@ -30,6 +31,7 @@ export default function App() {
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <Toaster richColors position="top-right" />
     </BrowserRouter>
   );
 }
