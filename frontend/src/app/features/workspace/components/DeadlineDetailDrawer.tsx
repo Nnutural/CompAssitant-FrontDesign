@@ -6,7 +6,7 @@ import { Tag } from '@/app/components/PageShell';
 
 import type { DeadlineReminder } from '../types';
 import type { WorkspaceAction } from '../store';
-import { deadlineStatusLabels, moduleLabels, toneForUrgency, urgencyLabels } from '../utils';
+import { deadlineStatusLabels, moduleLabels, pushWorkspaceTaskImport, toneForUrgency, urgencyLabels } from '../utils';
 
 export function DeadlineDetailDrawer({
   deadline,
@@ -88,6 +88,17 @@ export function DeadlineDetailDrawer({
           <button
             onClick={() => {
               dispatch({ type: 'addTaskFromDeadline', deadlineId: deadline.id });
+              pushWorkspaceTaskImport({
+                title: `处理提醒：${deadline.title}`,
+                description: deadline.description,
+                module: deadline.module,
+                sourceLabel: '截止提醒',
+                sourcePath: deadline.targetPath,
+                priority: deadline.urgency === 'critical' || deadline.urgency === 'high' ? 'high' : 'medium',
+                dueDate: deadline.date,
+                tags: ['截止提醒'],
+                relatedObjectId: deadline.id,
+              });
               toast.success('已加入计划任务');
             }}
             className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"

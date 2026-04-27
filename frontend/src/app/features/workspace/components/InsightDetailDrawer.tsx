@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { Tag } from '@/app/components/PageShell';
 
 import type { InsightItem } from '../types';
-import { buildInsightPrompt, isDemoUrl, moduleLabels } from '../utils';
+import { buildInsightPrompt, isDemoUrl, moduleLabels, pushWorkspaceTaskImport } from '../utils';
 
 export function InsightDetailDrawer({
   item,
@@ -29,6 +29,22 @@ export function InsightDetailDrawer({
   const chatTab = item.type === 'policy' ? 'policy' : 'hot';
   const chatMessage = item.type === 'policy' ? '已生成政策解读，并携带政策上下文' : '已加入问答分析，并携带热点上下文';
   const chatLabel = item.type === 'policy' ? '政策解读' : '问答分析';
+  const addToTaskInbox = () => {
+    const priority = item.heatScore >= 90 ? 'high' : item.heatScore >= 80 ? 'medium' : 'low';
+    const sourceLabel = item.type === 'policy' ? '国家政策' : item.type === 'industry' ? '行业热点' : '社会热点';
+    pushWorkspaceTaskImport({
+      title: item.title,
+      description: item.summary,
+      module: item.relatedModules[0] ?? 'chat',
+      sourceLabel,
+      sourcePath: `/chat?tab=${chatTab}&query=${encodeURIComponent(buildInsightPrompt(item))}`,
+      priority,
+      tags: item.tags,
+      relatedObjectId: item.id,
+    });
+    toast.success('已加入计划任务');
+    onClose();
+  };
 
   return (
     <>
@@ -123,10 +139,7 @@ export function InsightDetailDrawer({
             引用到写作
           </button>
           <button
-            onClick={() => {
-              toast.success('已加入计划任务');
-              onClose();
-            }}
+            onClick={addToTaskInbox}
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-blue-700"
           >
             加入任务

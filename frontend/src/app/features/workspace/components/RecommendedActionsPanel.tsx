@@ -11,6 +11,7 @@ import {
   moduleLabels,
   priorityLabels,
   priorityRank,
+  pushWorkspaceTaskImport,
   toneForPriority,
 } from '../utils';
 import { ActionDetailDrawer } from './ActionDetailDrawer';
@@ -136,6 +137,16 @@ export function RecommendedActionsPanel({
                       <button
                         onClick={() => {
                           dispatch({ type: 'addTaskFromAction', actionId: action.id });
+                          pushWorkspaceTaskImport({
+                            title: action.title,
+                            description: action.why,
+                            module: action.module,
+                            sourceLabel: '推荐行动',
+                            sourcePath: action.targetPath,
+                            priority: action.priority,
+                            tags: ['推荐行动'],
+                            relatedObjectId: action.id,
+                          });
                           toast.success('已加入计划任务');
                         }}
                         className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50"

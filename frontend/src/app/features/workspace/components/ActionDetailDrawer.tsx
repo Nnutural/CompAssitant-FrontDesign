@@ -6,7 +6,7 @@ import { Tag } from '@/app/components/PageShell';
 
 import type { WorkspaceAction } from '../store';
 import type { RecommendedAction } from '../types';
-import { actionStatusLabels, moduleLabels, priorityLabels, toneForPriority } from '../utils';
+import { actionStatusLabels, moduleLabels, priorityLabels, pushWorkspaceTaskImport, toneForPriority } from '../utils';
 
 export function ActionDetailDrawer({
   action,
@@ -25,6 +25,21 @@ export function ActionDetailDrawer({
     dispatch({ type: 'setActionStatus', actionId: action.id, status: 'started' });
     toast.success('已开始推荐行动');
     onNavigate(action.targetPath, '已跳转目标模块，并携带推荐行动上下文');
+  };
+
+  const addToTaskInbox = () => {
+    dispatch({ type: 'addTaskFromAction', actionId: action.id });
+    pushWorkspaceTaskImport({
+      title: action.title,
+      description: action.why,
+      module: action.module,
+      sourceLabel: '推荐行动',
+      sourcePath: action.targetPath,
+      priority: action.priority,
+      tags: ['推荐行动'],
+      relatedObjectId: action.id,
+    });
+    toast.success('已加入计划任务');
   };
 
   return (
@@ -100,10 +115,7 @@ export function ActionDetailDrawer({
             <ArrowRight className="h-4 w-4" />
           </button>
           <button
-            onClick={() => {
-              dispatch({ type: 'addTaskFromAction', actionId: action.id });
-              toast.success('已加入计划任务');
-            }}
+            onClick={addToTaskInbox}
             className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
           >
             <CalendarPlus className="h-4 w-4" />

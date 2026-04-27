@@ -10,6 +10,7 @@ import {
   deadlineStatusLabels,
   formatShortDate,
   moduleLabels,
+  pushWorkspaceTaskImport,
   toneForUrgency,
   urgencyLabels,
   urgencyRank,
@@ -63,6 +64,17 @@ export function DeadlineReminderPanel({
 
   const addTask = (deadline: DeadlineReminder) => {
     dispatch({ type: 'addTaskFromDeadline', deadlineId: deadline.id });
+    pushWorkspaceTaskImport({
+      title: `处理提醒：${deadline.title}`,
+      description: deadline.description,
+      module: deadline.module,
+      sourceLabel: '截止提醒',
+      sourcePath: deadline.targetPath,
+      priority: deadline.urgency === 'critical' || deadline.urgency === 'high' ? 'high' : 'medium',
+      dueDate: deadline.date,
+      tags: ['截止提醒'],
+      relatedObjectId: deadline.id,
+    });
     toast.success('已加入计划任务');
   };
 

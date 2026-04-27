@@ -9,6 +9,7 @@ import type { WorkspaceAction } from '../store';
 import {
   moduleLabels,
   priorityLabels,
+  pushWorkspaceTaskImport,
   toneForPriority,
 } from '../utils';
 import { WeeklyRhythmCard } from './WeeklyRhythmCard';
@@ -102,7 +103,19 @@ export function TodayTasksPanel({
                       详情
                     </button>
                     <button
-                      onClick={() => toast.success('已加入计划任务（演示）')}
+                      onClick={() => {
+                        pushWorkspaceTaskImport({
+                          title: task.title,
+                          description: task.description,
+                          module: task.module,
+                          sourceLabel: task.sourceLabel,
+                          sourcePath: task.targetPath,
+                          priority: task.priority,
+                          tags: ['今日要务'],
+                          relatedObjectId: task.id,
+                        });
+                        toast.success('已加入计划任务');
+                      }}
                       className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50"
                     >
                       <CalendarPlus className="h-3.5 w-3.5" />

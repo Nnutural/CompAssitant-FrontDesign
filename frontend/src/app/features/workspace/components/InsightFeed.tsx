@@ -6,7 +6,7 @@ import { Card, Tag } from '@/app/components/PageShell';
 
 import type { WorkspaceAction } from '../store';
 import type { InsightItem, InsightType, WorkspaceDashboard } from '../types';
-import { buildInsightPrompt } from '../utils';
+import { buildInsightPrompt, pushWorkspaceTaskImport } from '../utils';
 import { InsightDetailDrawer } from './InsightDetailDrawer';
 import { WorkspaceEmptyState } from './WorkspaceEmptyState';
 
@@ -54,6 +54,21 @@ export function InsightFeed({
   const toggleFavorite = (item: InsightItem) => {
     dispatch({ type: 'toggleInsightFavorite', insightId: item.id });
     toast.success(item.favorited ? '已取消收藏热点' : '已收藏热点');
+  };
+
+  const addInsightTask = (item: InsightItem) => {
+    const priority = item.heatScore >= 90 ? 'high' : item.heatScore >= 80 ? 'medium' : 'low';
+    pushWorkspaceTaskImport({
+      title: item.title,
+      description: item.summary,
+      module: item.relatedModules[0] ?? 'chat',
+      sourceLabel: type === 'industry' ? '行业热点' : '社会热点',
+      sourcePath: `/chat?tab=hot&query=${encodeURIComponent(buildInsightPrompt(item))}`,
+      priority,
+      tags: item.tags,
+      relatedObjectId: item.id,
+    });
+    toast.success('已加入计划任务');
   };
 
   return (
@@ -144,7 +159,7 @@ export function InsightFeed({
                         引用
                       </button>
                       <button
-                        onClick={() => toast.success('已加入计划任务')}
+                        onClick={() => addInsightTask(item)}
                         className="inline-flex items-center gap-1.5 rounded-lg bg-brand-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-blue-700"
                       >
                         加任务

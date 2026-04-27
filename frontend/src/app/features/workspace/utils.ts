@@ -12,6 +12,8 @@ import type {
   WorkspaceDashboard,
   WorkspaceModule,
 } from './types';
+import { pushTaskImport } from '@/app/features/tasks/taskBridge';
+import type { TaskImportPayload, TaskModule } from '@/app/features/tasks/types';
 
 export const moduleLabels: Record<WorkspaceModule, string> = {
   writing: '选题写作',
@@ -225,4 +227,34 @@ export function mergeUnique(values: string[], value: string): string[] {
 
 export function removeValue(values: string[], value: string): string[] {
   return values.filter((item) => item !== value);
+}
+
+function mapWorkspaceModule(module: WorkspaceModule): TaskModule {
+  if (module === 'tasks') return 'workspace';
+  return module;
+}
+
+export function pushWorkspaceTaskImport(input: {
+  title: string;
+  description: string;
+  module: WorkspaceModule;
+  sourceLabel: string;
+  sourcePath: string;
+  priority: Priority;
+  dueDate?: string;
+  tags?: string[];
+  relatedObjectId?: string;
+}) {
+  const payload: TaskImportPayload = {
+    title: input.title,
+    description: input.description,
+    module: mapWorkspaceModule(input.module),
+    sourceLabel: input.sourceLabel,
+    sourcePath: input.sourcePath,
+    priority: input.priority,
+    dueDate: input.dueDate,
+    tags: input.tags ?? ['总览导入'],
+    relatedObjectId: input.relatedObjectId,
+  };
+  pushTaskImport(payload);
 }

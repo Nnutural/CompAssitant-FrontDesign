@@ -7,7 +7,7 @@ import { Card, Tag } from '@/app/components/PageShell';
 import { loadPolicyFeedDemo } from '../api';
 import type { WorkspaceAction } from '../store';
 import type { InsightItem, WorkspaceDashboard } from '../types';
-import { buildInsightPrompt, isDemoUrl } from '../utils';
+import { buildInsightPrompt, isDemoUrl, pushWorkspaceTaskImport } from '../utils';
 import { InsightDetailDrawer } from './InsightDetailDrawer';
 import { WorkspaceEmptyState } from './WorkspaceEmptyState';
 import { WorkspaceErrorState } from './WorkspaceErrorState';
@@ -67,6 +67,20 @@ export function PolicyFeed({
       return;
     }
     window.open(policy.sourceUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const addPolicyTask = (policy: InsightItem) => {
+    pushWorkspaceTaskImport({
+      title: policy.title,
+      description: policy.summary,
+      module: policy.relatedModules[0] ?? 'chat',
+      sourceLabel: '国家政策',
+      sourcePath: `/chat?tab=policy&query=${encodeURIComponent(buildInsightPrompt(policy))}`,
+      priority: policy.reliability >= 90 ? 'high' : 'medium',
+      tags: policy.tags,
+      relatedObjectId: policy.id,
+    });
+    toast.success('已加入计划任务');
   };
 
   if (loadState === 'loading') {
@@ -149,7 +163,7 @@ export function PolicyFeed({
                           引用
                         </button>
                         <button
-                          onClick={() => toast.success('已加入计划任务')}
+                          onClick={() => addPolicyTask(policy)}
                           className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50"
                         >
                           加任务
