@@ -1,3 +1,4 @@
+// Legacy overview prototype. /home redirects to /workspace, so the active overview is implemented in Workspace.tsx.
 import { TrendingUp, Calendar, FileText, Database, Plus, Eye, ArrowRight } from 'lucide-react';
 import { DataTag } from '@/app/components/DataTag';
 
