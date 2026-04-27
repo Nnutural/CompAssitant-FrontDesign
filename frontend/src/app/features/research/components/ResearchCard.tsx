@@ -128,7 +128,7 @@ export function ResearchCard({
             {itemType === 'news' && (
               <ActionButton icon={CheckCircle2} label="已读" active={(item as NewsItem).read} onClick={onRead} />
             )}
-            {itemType === 'paper' && (
+{itemType === 'paper' && (
               <ActionButton icon={Bookmark} label="阅读清单" active={(item as PaperItem).in_reading_list} onClick={onReadingList} />
             )}
           </div>

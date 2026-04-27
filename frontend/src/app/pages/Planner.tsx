@@ -1,3 +1,4 @@
+// Legacy task prototype. /tasks is the active implementation; do not extend this page.
 import { useState } from 'react';
 import { Calendar, List, CheckCircle2, AlertCircle } from 'lucide-react';
 
